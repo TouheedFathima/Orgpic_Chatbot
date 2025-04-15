@@ -1,0 +1,136 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OrgPick Assistant</title>
+ 
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <div class="chat-container" id="chatContainer" style="display:none;">
+    <div class="chat-header">
+      <div class="header-left">
+        <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Bot Icon" class="bot-icon">
+        <span>OrgPick Assistant</span>
+      </div>
+      <button class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div id="chatbox" class="chatbox">
+      <div class="message bot-message">
+        <div class="message-content">
+          Hey there! I'm Picki
+          <div class="message-avatar">
+            <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Bot">
+          </div>
+        </div>
+        <div class="message-time">12:54PM</div>
+      </div>
+      <div class="message bot-message">
+        <div class="message-content">
+          Here to help you pick the best organic goodies. Let's find something fresh together!
+          <div class="message-avatar">
+            <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Bot">
+          </div>
+        </div>
+        <div class="message-time">12:54PM</div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Message">
+      <button class="mic-btn">
+        <img src="{{ url_for('static', filename='img/material-symbols_mic.svg') }}" alt="Mic">
+      </button>
+      <button id="sendButton" class="send-btn">
+        <img src="{{ url_for('static', filename='img/carbon_send-alt.svg') }}" alt="Send">
+      </button>
+    </div>
+  </div>
+
+  <button class="help-button" id="helpButton">
+    <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Help" class="help-icon">
+    Ask Me Anything?
+  </button>
+  
+
+  <!-- Embed bot/user avatar URLs as global JS variables -->
+  <script>
+    const BOT_AVATAR_URL = "{{ url_for('static', filename='img/mage_robot-happy.svg') }}";
+    const USER_AVATAR_URL = "{{ url_for('static', filename='img/profile.jpg') }}";
+  </script>
+
+  <script>
+    function addMessage(text, isUser = false) {
+      const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      const chatbox = document.getElementById("chatbox");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = isUser ? "message user-message" : "message bot-message";
+      
+      const avatarImg = isUser ? USER_AVATAR_URL : BOT_AVATAR_URL;
+      
+      messageDiv.innerHTML = `
+        <div class="message-content">
+          ${text}
+          <div class="message-avatar">
+            <img src="${avatarImg}" alt="${isUser ? 'User' : 'Bot'}">
+          </div>
+        </div>
+        <div class="message-time">${currentTime}</div>
+      `;
+      
+      chatbox.appendChild(messageDiv);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function getBotResponse() {
+      const userText = document.getElementById("userInput").value;
+      if (userText.trim() === "") return;
+      
+      addMessage(userText, true);
+      document.getElementById("userInput").value = "";
+      
+      // Show typing indicator
+      const chatbox = document.getElementById("chatbox");
+      const typingDiv = document.createElement("div");
+      typingDiv.className = "typing-indicator";
+      typingDiv.innerHTML = `<span></span><span></span><span></span>`;
+      chatbox.appendChild(typingDiv);
+      chatbox.scrollTop = chatbox.scrollHeight;
+      
+      fetch(`/get?msg=${encodeURIComponent(userText)}`)
+        .then(res => res.text())
+        .then(data => {
+          chatbox.removeChild(typingDiv);
+          addMessage(data, false);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("sendButton").onclick = getBotResponse;
+      document.getElementById("userInput").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          getBotResponse();
+        }
+      });
+      
+      const closeBtn = document.querySelector('.close-btn');
+      const helpButton = document.querySelector('#helpButton');
+      const chatContainer = document.querySelector('#chatContainer');
+      
+      closeBtn.addEventListener('click', function() {
+        chatContainer.style.display = 'none';
+        helpButton.style.display = 'flex';
+      });
+      
+      helpButton.addEventListener('click', function() {
+        chatContainer.style.display = 'flex';
+        helpButton.style.display = 'none';
+      });
+      
+      helpButton.style.display = 'flex';
+    });
+  </script>
+</body>
+</html>

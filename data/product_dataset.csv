@@ -1,0 +1,491 @@
+Health Problem,Product,Health Benefit
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
+Gas Problems,Ginger Tea Extract,Relieves nausea and bloating
+Gas Problems,Peppermint Tea Extract,Soothes digestive discomfort
+Diabetes,Moringa Leaf Powder Extract,Lowers blood sugar
+Diabetes,Cinnamon Extract,Helps regulate blood sugar
+Hair Fall,Coconut Oil Extract,Nourishes hair and promotes growth
+Hair Fall,Fenugreek Seeds Extract,Strengthens hair
+Skin Problems,Aloe Vera Gel Extract,Hydrates skin and reduces acne
+Skin Problems,Tea Tree Oil Extract,Treats skin infections
+Digestive Issues,Yogurt Extract,Promotes gut health with probiotics
+Digestive Issues,Fennel Seeds Extract,Alleviates bloating and improves digestion
+General Health,Tulsi Tea Extract,Boosts immunity and reduces stress
+General Health,Apple Cider Vinegar Extract,Improves metabolism and gut health
+PCOS,Spearmint Tea Extract,Alleviates androgens and balances hormones
+PCOS,Flax Seeds Extract,Regulates estrogen levels
+PCOD,Chia Seeds Extract,Improves insulin resistance and hormone balance
+PCOD,Ashwagandha Extract,Alleviates stress and supports reproductive health
+Cold & Flu,Turmeric Milk Extract,Boosts immunity and reduces inflammation
+Cold & Flu,Eucalyptus Oil Extract,Relieves nasal congestion
+Weight Loss,Green Tea Extract,Enhances metabolism and burns fat
+Weight Loss,Lemon Water Extract,Detoxifies and aids digestion
+Joint Pain,Turmeric Extract,Alleviates inflammation and joint pain
+Joint Pain,Ginger Extract,Alleviates arthritis symptoms
+Heart Health,Garlic Extract,Lowers cholesterol and improves heart health
+Heart Health,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+Anxiety & Stress,Chamomile Tea Extract,Calms the mind and improves sleep
+Anxiety & Stress,Lavender Oil Extract,Alleviates anxiety and stress
+Sleep Disorders,Ashwagandha Extract,Improves sleep quality
+Sleep Disorders,Melatonin Supplements Extract,Regulates sleep cycle
+Sleep Problems,Ashwagandha Extract,Improves sleep quality
+Joint Stiffness,Ginger Extract,Alleviates arthritis symptoms
+Heart Disease,Omega-3 Fish Oil Extract,Enhances cardiovascular function
+High Cholesterol,Flax Seeds Extract,Lowers bad cholesterol
+High Blood Pressure,Hibiscus Tea Extract,Helps reduce blood pressure
+Liver Health,Milk Thistle Extract,Enhances liver detoxification
+Fatty Liver,Green Coffee Bean Extract,Improves liver health and fat metabolism
+Kidney Health,Cranberry Juice Extract,Prevents kidney infections
+UTI,Cranberry Supplements Extract,Alleviates urinary tract infections
+Menstrual Cramps,Ginger Tea Extract,Alleviates period pain
+Menstrual Pain,Fennel Tea Extract,Relieves cramps and bloating
+Osteoporosis,Calcium & Vitamin D Extract,Strengthens bones
+Weak Bones,Sesame Seeds Extract,Increases calcium levels
+Vision Problems,Carrot Juice Extract,Improves eye health
+Eye Strain,Blueberry Extract,Alleviates eye fatigue
+Thyroid Problems,Brazil Nuts Extract,Enhances thyroid function
+Hypothyroidism,Ashwagandha Extract,Helps regulate thyroid hormone levels
+Memory Loss,Brahmi Extract,Enhances cognitive function
+Brain Fog,Ginkgo Biloba Extract,Improves memory and focus
+Fatigue,Maca Root Extract,Boosts energy levels
+Low Energy,B12 Supplements Extract,Increases stamina and energy
