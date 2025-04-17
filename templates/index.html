@@ -1,10 +1,13 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>OrgPick Assistant</title>
- 
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+</head>
+<body>
 
   <div class="chat-container" id="chatContainer" style="display:none;">
     <div class="chat-header">
@@ -17,26 +20,7 @@
       </button>
     </div>
 
-    <div id="chatbox" class="chatbox">
-      <div class="message bot-message">
-        <div class="message-content">
-          Hey there! I'm Picki
-          <div class="message-avatar">
-            <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Bot">
-          </div>
-        </div>
-        <div class="message-time">12:54PM</div>
-      </div>
-      <div class="message bot-message">
-        <div class="message-content">
-          Here to help you pick the best organic goodies. Let's find something fresh together!
-          <div class="message-avatar">
-            <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Bot">
-          </div>
-        </div>
-        <div class="message-time">12:54PM</div>
-      </div>
-    </div>
+    <div id="chatbox" class="chatbox"></div>
 
     <div class="chat-input">
       <input type="text" id="userInput" placeholder="Message">
@@ -53,23 +37,23 @@
     <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Help" class="help-icon">
     Ask Me Anything?
   </button>
-  
 
-  <!-- Embed bot/user avatar URLs as global JS variables -->
   <script>
     const BOT_AVATAR_URL = "{{ url_for('static', filename='img/mage_robot-happy.svg') }}";
-    const USER_AVATAR_URL = "{{ url_for('static', filename='img/profile.jpg') }}";
-  </script>
+    const USER_AVATAR_URL = "{{ url_for('static', filename='img/user_img.png') }}";
 
-  <script>
+    function getCurrentTime() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
     function addMessage(text, isUser = false) {
-      const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      const currentTime = getCurrentTime();
       const chatbox = document.getElementById("chatbox");
       const messageDiv = document.createElement("div");
       messageDiv.className = isUser ? "message user-message" : "message bot-message";
-      
+
       const avatarImg = isUser ? USER_AVATAR_URL : BOT_AVATAR_URL;
-      
+
       messageDiv.innerHTML = `
         <div class="message-content">
           ${text}
@@ -79,7 +63,7 @@
         </div>
         <div class="message-time">${currentTime}</div>
       `;
-      
+
       chatbox.appendChild(messageDiv);
       chatbox.scrollTop = chatbox.scrollHeight;
     }
@@ -87,18 +71,17 @@
     function getBotResponse() {
       const userText = document.getElementById("userInput").value;
       if (userText.trim() === "") return;
-      
+
       addMessage(userText, true);
       document.getElementById("userInput").value = "";
-      
-      // Show typing indicator
+
       const chatbox = document.getElementById("chatbox");
       const typingDiv = document.createElement("div");
       typingDiv.className = "typing-indicator";
       typingDiv.innerHTML = `<span></span><span></span><span></span>`;
       chatbox.appendChild(typingDiv);
       chatbox.scrollTop = chatbox.scrollHeight;
-      
+
       fetch(`/get?msg=${encodeURIComponent(userText)}`)
         .then(res => res.text())
         .then(data => {
@@ -108,29 +91,34 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      const chatbox = document.getElementById("chatbox");
+
+      // Initial welcome bot messages with real-time timestamps
+      addMessage("Hey there! I'm Picki", false);
+      addMessage("Here to help you pick the best organic goodies. Let's find something fresh together!", false);
+
       document.getElementById("sendButton").onclick = getBotResponse;
       document.getElementById("userInput").addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
-          getBotResponse();
-        }
+        if (e.key === "Enter") getBotResponse();
       });
-      
+
       const closeBtn = document.querySelector('.close-btn');
       const helpButton = document.querySelector('#helpButton');
       const chatContainer = document.querySelector('#chatContainer');
-      
+
       closeBtn.addEventListener('click', function() {
         chatContainer.style.display = 'none';
         helpButton.style.display = 'flex';
       });
-      
+
       helpButton.addEventListener('click', function() {
         chatContainer.style.display = 'flex';
         helpButton.style.display = 'none';
       });
-      
+
       helpButton.style.display = 'flex';
     });
   </script>
+
 </body>
 </html>
