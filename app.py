@@ -217,8 +217,6 @@ def home():
         return redirect("/profile")  # Redirects to the profile form first
     return render_template("index.html")  # If profile is filled, show chatbot
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 4000))
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-    
