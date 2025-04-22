@@ -218,5 +218,5 @@ def home():
     return render_template("index.html")  # If profile is filled, show chatbot
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Get port from environment variable
+    port = int(os.environ.get("PORT", 4000))  # Get port from environment variable
     app.run(host="0.0.0.0", port=port) 
