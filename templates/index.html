@@ -8,6 +8,10 @@
 
 </head>
 <body>
+    <!-- User profile icon that links to the profile form -->
+    <a href="/profile" class="user-icon" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
+      <img src="{{ url_for('static', filename='img/user_img.png') }}" alt="User Profile" width="40" style="border-radius: 50%;">
+    </a>
 
   <div class="chat-container" id="chatContainer" style="display:none;">
     <div class="chat-header">

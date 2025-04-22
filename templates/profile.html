@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .profile-container {
+      max-width: 800px;
+      margin: 80px auto;
+      padding: 30px;
+      border-radius: 12px;
+      background-color: #f4f4f4;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .profile-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .profile-container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .profile-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .profile-container button:hover {
+      background-color: #0056b3;
+    }
+
+  .profile-display, .profile-form {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .profile-display h3, .profile-form h3 {
+    margin-bottom: 15px;
+  }
+
+  input, select, button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+  }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <h2>User Profile</h2>
+
+    <!-- Profile Display Section -->
+    <div class="profile-display">
+      <h3>Current Information</h3>
+      <p><strong>Name:</strong> {{ profile.get('name', 'Not set') }}</p>
+      <p><strong>Email:</strong> {{ profile.get('email', 'Not set') }}</p>
+      <p><strong>Phone:</strong> {{ profile.get('phone', 'Not set') }}</p>
+      <p><strong>Age:</strong> {{ profile.get('age', 'Not set') }}</p>
+      <p><strong>Gender:</strong> {{ profile.get('gender', 'Not set') }}</p>
+      <p><strong>Diet:</strong> {{ profile.get('diet', 'Not set') }}</p>
+      <p><strong>Goal:</strong> {{ profile.get('goal', 'Not set') }}</p>
+      <p><strong>Allergies:</strong> {{ profile.get('allergies', 'Not set') }}</p>
+      <p><strong>Lifestyle:</strong> {{ profile.get('lifestyle', 'Not set') }}</p>
+    </div>
+
+    <hr>
+
+    <!-- Profile Update Form -->
+    <div class="profile-form">
+      <h3>Update Your Profile</h3>
+      <form method="POST">
+        <input type="text" name="name" placeholder="Name" value="{{ profile.get('name', '') }}" required>
+        <input type="email" name="email" placeholder="Email" value="{{ profile.get('email', '') }}" required>
+        <input type="text" name="phone" placeholder="Phone" value="{{ profile.get('phone', '') }}">
+        
+        <input type="number" name="age" placeholder="Age" value="{{ profile.get('age', '') }}" required>
+        
+        <select name="gender" required>
+          <option value="" disabled {% if not profile.get('gender') %}selected{% endif %}>Select Gender</option>
+          <option value="male" {% if profile.get('gender') == 'male' %}selected{% endif %}>Male</option>
+          <option value="female" {% if profile.get('gender') == 'female' %}selected{% endif %}>Female</option>
+          <option value="other" {% if profile.get('gender') == 'other' %}selected{% endif %}>Other</option>
+        </select>
+      
+        <select name="diet" required>
+          <option value="" disabled {% if not profile.get('diet') %}selected{% endif %}>Select Diet</option>
+          <option value="vegetarian" {% if profile.get('diet') == 'vegetarian' %}selected{% endif %}>Vegetarian</option>
+          <option value="non-vegetarian" {% if profile.get('diet') == 'non-vegetarian' %}selected{% endif %}>Non-Vegetarian</option>
+          <option value="vegan" {% if profile.get('diet') == 'vegan' %}selected{% endif %}>Vegan</option>
+        </select>
+      
+        <input type="text" name="goal" placeholder="Health Goal" value="{{ profile.get('goal', '') }}" required>
+        <input type="text" name="allergies" placeholder="Allergies" value="{{ profile.get('allergies', '') }}">
+        <input type="text" name="lifestyle" placeholder="Lifestyle" value="{{ profile.get('lifestyle', '') }}">
+      
+        <button type="submit">Save</button>
+      </form>
+    </div>
+
+  </div>
+</body>
+</html>
