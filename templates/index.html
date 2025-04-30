@@ -5,13 +5,11 @@
   <title>OrgPick Assistant</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-
 </head>
 <body>
-    <!-- User profile icon that links to the profile form -->
-    <a href="/profile" class="user-icon" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
-      <img src="{{ url_for('static', filename='img/user_img.png') }}" alt="User Profile" width="40" style="border-radius: 50%;">
-    </a>
+  <a href="/profile" class="user-icon" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
+    <img src="{{ url_for('static', filename='img/user_img.png') }}" alt="User Profile" width="40" style="border-radius: 50%;">
+  </a>
 
   <div class="chat-container" id="chatContainer" style="display:none;">
     <div class="chat-header">
@@ -35,6 +33,7 @@
         <img src="{{ url_for('static', filename='img/carbon_send-alt.svg') }}" alt="Send">
       </button>
     </div>
+    <button id="startOverButton" style="margin: 10px; padding: 8px; background-color: #FF8800; color: white; border: none; border-radius: 5px; cursor: pointer;">Start Over</button>
   </div>
 
   <button class="help-button" id="helpButton">
@@ -86,20 +85,24 @@
       chatbox.appendChild(typingDiv);
       chatbox.scrollTop = chatbox.scrollHeight;
 
-      fetch(`/get?msg=${encodeURIComponent(userText)}`)
-        .then(res => res.text())
-        .then(data => {
-          chatbox.removeChild(typingDiv);
-          addMessage(data, false);
-        });
+      setTimeout(() => {
+        fetch(`/get?msg=${encodeURIComponent(userText)}`)
+          .then(res => res.text())
+          .then(data => {
+            chatbox.removeChild(typingDiv);
+            addMessage(data, false);
+          })
+          .catch(error => {
+            chatbox.removeChild(typingDiv);
+            addMessage("Sorry, something went wrong. Please try again.", false);
+          });
+      }, 1000);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       const chatbox = document.getElementById("chatbox");
 
-      // Initial welcome bot messages with real-time timestamps
-      addMessage("Hey there! I'm Picki", false);
-      addMessage("Here to help you pick the best organic goodies. Let's find something fresh together!", false);
+      addMessage("Hey there! I'm Piciki. How can I assist you today?", false);
 
       document.getElementById("sendButton").onclick = getBotResponse;
       document.getElementById("userInput").addEventListener("keypress", function(e) {
@@ -109,6 +112,7 @@
       const closeBtn = document.querySelector('.close-btn');
       const helpButton = document.querySelector('#helpButton');
       const chatContainer = document.querySelector('#chatContainer');
+      const startOverButton = document.querySelector('#startOverButton');
 
       closeBtn.addEventListener('click', function() {
         chatContainer.style.display = 'none';
@@ -120,9 +124,17 @@
         helpButton.style.display = 'none';
       });
 
+      startOverButton.addEventListener('click', function() {
+        fetch('/get?msg=reset')
+          .then(res => res.text())
+          .then(data => {
+            chatbox.innerHTML = '';
+            addMessage(data, false);
+          });
+      });
+
       helpButton.style.display = 'flex';
     });
   </script>
-
 </body>
 </html>

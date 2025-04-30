@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session,redirect
+from flask import Flask, render_template, request, session, redirect
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 import requests
@@ -7,13 +7,13 @@ from keybert import KeyBERT
 import re
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = "orgpick_secret_123"  
-
+app.secret_key = "orgpick_secret_123"
 
 # Load data
 df = pd.read_csv("data/product_dataset.csv")
@@ -22,41 +22,50 @@ df = pd.read_csv("data/product_dataset.csv")
 model = SentenceTransformer('all-MiniLM-L6-v2')
 kw_model = KeyBERT(model)
 
-def is_greeting(text):
-    greetings = ["hi", "hello", "hey", "good morning", "good evening", "how are you", "what's up"]
-    text = text.lower().strip()
-    return any(greet in text for greet in greetings)
-
-def get_groq_reply(user_input, profile):
+def get_groq_reply(user_input, profile, conversation_context=None):
     prompt = f"""
-You are a friendly and knowledgeable natural health assistant.
+You are Piciki, a friendly and knowledgeable natural health assistant specializing in organic remedies.
 
-If the message is not a health query, just respond like a helpful friend.
+User Profile:
+- Name: {profile.get('name', 'Unknown')}
+- Age: {profile.get('age', 'N/A')}
+- Gender: {profile.get('gender', 'N/A')}
+- Diet: {profile.get('diet', 'N/A')}
+- Goal: {profile.get('goal', 'N/A')}
+- Allergies: {profile.get('allergies', 'None')}
+- Lifestyle: {profile.get('lifestyle', 'Not specified')}
 
-    User Profile:
-    - Name: {profile.get('name', 'Unknown')}
-    - Age: {profile.get('age', 'N/A')}
-    - Gender: {profile.get('gender', 'N/A')}
-    - Diet: {profile.get('diet', 'N/A')}
-    - Goal: {profile.get('goal', 'N/A')}
-    - Allergies: {profile.get('allergies', 'None')}
-    - Lifestyle: {profile.get('lifestyle', 'Not specified')}
+Conversation History:
+{conversation_context or 'No prior conversation'}
 
-    Instructions:
-    - Greet the user using their first name only once (e.g., "Hi Touheed").
-    - Avoid excessive enthusiasm (no more than one friendly sentence).
-    - Greet the user in a warm and natural tone using their name only once.
-    - Avoid being overly enthusiastic or repetitive (e.g., no multiple greetings or exaggerated compliments).
-    - If the message is a casual greeting (like "hi" or "hello"), respond kindly and simply ask how you can help.
-    - If it's a health-related question, give friendly, calm guidance or natural remedies if asked.
-    - Keep the message brief, warm, and useful.
-    - If they mention health issues, offer natural advice and encourage them gently.
-    - If the user asks for remedies or has symptoms, try to be helpful and suggest home remedies or health tips.
-    - If no health issue is mentioned, keep the chat friendly and offer general wellness advice.
-    - End replies with a friendly follow-up like "Would you like help with anything else?"
+Instructions:
+- Use a warm, natural tone. Greet the user by their first name ONLY in the first response of a new conversation.
+- Keep responses concise, readable, and well-structured:
+  - Use short paragraphs (1-2 sentences max).
+  - Separate distinct ideas (e.g., context, questions, remedies) into different paragraphs.
+  - When listing remedies, use a numbered list with clear, actionable steps.
+- Avoid repetitive greetings or overly enthusiastic responses.
+- If the user input is a greeting (e.g., "hi", "hello", "hlo"), respond kindly, reset the conversation, and ask how you can help (e.g., "Hey [Name], nice to hear from you! What's on your mind?").
+- If the user mentions a health problem, acknowledge it and ask at least two relevant clarifying questions to understand their condition better, unless you have enough information to proceed to recommendations earlier.
+- Condition-specific question guidance:
+  - For "hair fall" or "hairfall": Ask about symptoms (e.g., dandruff, itchiness), lifestyle changes (e.g., stress, diet), or environmental factors (e.g., travel, water quality).
+  - For "PCOS": Ask about symptoms (e.g., irregular periods, facial hair) or diet/lifestyle changes.
+  - For "acne": Ask about symptoms (e.g., location of acne) or skincare/diet triggers.
+  - For other health problems, ask symptom-based or lifestyle-related questions relevant to the condition.
+- Use the user’s responses and conversation history to ask follow-up questions that build on prior answers, maintaining context and avoiding repetition.
+- Proceed to recommendations when you have enough information (e.g., after 2 or more questions, or if the problem is clear earlier):
+  - Suggest organic products or natural remedies tailored to the user’s condition, profile, and conversation history.
+  - Present remedies in a numbered list with clear steps (e.g., "1. Massage warm coconut oil into your scalp for 1 hour before shampooing.").
+  - Check the provided dataset for specific products (e.g., "Neem oil for hair fall with dandruff") and include clickable purchase links.
+  - If no dataset matches are found, provide general advice and indicate that external sources will be checked for additional recommendations.
+- Keep responses brief, helpful, and end with a follow-up question or "Would you like help with anything else?" when recommending.
+- If the user says "reset", clear the conversation history and start fresh.
+- Do not reset the conversation or misinterpret responses as greetings unless they are clearly greetings (e.g., "hi", "hello") or "reset".
+- Maintain context from the conversation history to avoid referencing incorrect topics (e.g., don’t mention sleep if the topic is hair fall).
+- If the user uses casual inputs like "hey" but continues the same topic, treat it as a continuation, not a reset.
 
-    Now answer this user message: {user_input}
-    """
+Current User Message: {user_input}
+"""
 
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
@@ -73,44 +82,32 @@ If the message is not a health query, just respond like a helpful friend.
             "https://api.groq.com/openai/v1/chat/completions",
             headers=headers,
             json=data,
-            timeout=10  # Optional: Add timeout for safety
+            timeout=10
         )
-
         result = response.json()
-
-        # Debugging help
-        print("Groq response:", result)
-
         if "choices" in result and len(result["choices"]) > 0:
             return result["choices"][0]["message"]["content"]
-        else:
-            return "Oops! Couldn't understand your request. Can you please rephrase it?"
+        return "Oops! Couldn't understand your request. Can you please rephrase it?"
     except Exception as e:
         print("Groq API Error:", e)
-        return "Sorry, I'm having trouble accessing my health advice brain right now. Please try again later!"
+        return "Sorry, I'm having trouble right now. Please try again later!"
 
-
-# ✅ Normalize function for consistent comparison
 def normalize_text(text):
     return re.sub(r"\s+", "", text.lower().strip())
 
-# ✅ Preprocess dataset
+# Preprocess dataset
 df['normalized_problem'] = df['Health Problem'].apply(normalize_text)
 df['embedding'] = df['normalized_problem'].apply(lambda x: model.encode(x))
 
-# ✅ Extract keyphrase from user input
 def extract_keyphrases(text, num_phrases=3):
     keywords = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 3), stop_words='english', top_n=num_phrases)
     phrases = [kw[0] for kw in keywords]
     return phrases[0] if phrases else text
 
-# ✅ External remedy scraping (fallback)
 def fetch_external_recommendations(query):
     try:
         search_url = f"https://www.google.com/search?q=natural+remedies+for+{query.replace(' ', '+')}"
-        headers = {
-            "User-Agent": "Mozilla/5.0"
-        }
+        headers = {"User-Agent": "Mozilla/5.0"}
         response = requests.get(search_url, headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -130,7 +127,7 @@ def fetch_external_recommendations(query):
                 response += f"- {rec}<br>"
             return response
         else:
-            return "I'm sorry, I couldn't find any external recommendations either."
+            return "I'm sorry, I couldn't find any external recommendations."
     except Exception as e:
         print("Error while fetching external data:", e)
         return "An error occurred while fetching external recommendations."
@@ -142,57 +139,90 @@ def get_bot_response():
         return "Please describe your health concern so I can help you."
 
     profile = session.get("profile", {})
-    name = profile.get("name", "")
-
-    try:
-        llm_response = get_groq_reply(user_input, profile)
-    except Exception as e:
-        print("Groq API Error:", e)
-        llm_response = "I'm here to help with your health or wellness questions!"
+    conversation = session.get("conversation", {
+        "state": "initial",
+        "health_problem": None,
+        "context": [],
+        "question_count": 0
+    })
 
     response = ""
-   
-    # Always show Groq response first
-    response += llm_response + "<br><br>"
-
-    # Check if user message is just a greeting
-    if is_greeting(user_input):
-        return response + "Would you like help with a health concern or natural remedy?"
-
-    # If it's a health query, extract keyphrase and match products
     keyphrase = extract_keyphrases(user_input)
     normalized_keyphrase = normalize_text(keyphrase)
-    user_embedding = model.encode(normalized_keyphrase)
 
-    df["similarity"] = df["embedding"].apply(lambda x: util.cos_sim(x, user_embedding).item())
-    top_matches = df[df["similarity"] > 0.6].sort_values(by="similarity", ascending=False)
+    # Handle reset request
+    if user_input.lower().strip() == "reset":
+        conversation = {"state": "initial", "health_problem": None, "context": [], "question_count": 0}
+        session["conversation"] = conversation
+        session.modified = True
+        print("Conversation reset:", conversation)
+        return "Let's start fresh! What's your health concern?"
 
-    shown = set()
+    # Build conversation context
+    conversation_context = "\n".join([f"User: {c['user']}\nBot: {c['bot']}" for c in conversation["context"]])
+    print("Current context:", conversation_context)
 
-    if not top_matches.empty:
-        response += "<strong>Based on your concern, here are some natural product recommendations:</strong><br><br>"
-        for _, row in top_matches.iterrows():
-            product = row['Product']
-            benefit = row['Health Benefit']
-            unique_key = f"{product.lower().strip()}|{benefit.lower().strip()}"
+    # Get LLM response
+    llm_response = get_groq_reply(user_input, profile, conversation_context)
+    conversation["context"].append({"user": user_input, "bot": llm_response})
 
-            if unique_key not in shown:
-                search_term = product.replace(" ", "+")
-                response += f"""<div style="margin-bottom: 12px;">
-                    <strong>{product}</strong> – {benefit}<br>
-                    🔗 <a href="https://www.amazon.in/s?k={search_term}" target="_blank">Amazon</a> |
-                    <a href="https://www.flipkart.com/search?q={search_term}" target="_blank">Flipkart</a> |
-                    <a href="https://www.patanjaliayurved.net/search?query={search_term}" target="_blank">Patanjali</a>
-                </div>"""
-                shown.add(unique_key)
-    else:
-        # No internal matches, fallback to external search
-        response += "<br><strong>Couldn't find a direct match, but here are some external suggestions:</strong><br><br>"
-        response += fetch_external_recommendations(user_input)
+    # Detect health problem if initial
+    if conversation["state"] == "initial":
+        for problem in df["Health Problem"].str.lower().unique():
+            if problem in normalized_keyphrase:
+                conversation["state"] = "questioning"
+                conversation["health_problem"] = problem
+                conversation["question_count"] = 1
+                break
 
-    return response
+    # Update question count and state
+    if conversation["state"] == "questioning":
+        conversation["question_count"] += 1
+        # Move to recommendations after 2 questions if enough info or if LLM suggests remedies
+        if (conversation["question_count"] >= 2 and any(kw in llm_response.lower() for kw in ["recommend", "suggest", "try", "use"])) or conversation["question_count"] >= 4:
+            conversation["state"] = "recommendation"
+        else:
+            conversation["state"] = "questioning"
 
-    
+    session["conversation"] = conversation
+    session.modified = True
+    print("Updated conversation:", conversation)
+
+    # Handle recommendation mode
+    if conversation["state"] == "recommendation":
+        user_embedding = model.encode(normalized_keyphrase)
+        df["similarity"] = df["embedding"].apply(lambda x: util.cos_sim(x, user_embedding).item())
+        top_matches = df[df["similarity"] > 0.6].sort_values(by="similarity", ascending=False)
+
+        shown = set()
+        if not top_matches.empty:
+            response += "<strong>Here are some natural product recommendations for your concern:</strong><br><br>"
+            for _, row in top_matches.iterrows():
+                product = row['Product']
+                benefit = row['Health Benefit']
+                unique_key = f"{product.lower().strip()}|{benefit.lower().strip()}"
+                if unique_key not in shown:
+                    search_term = product.replace(" ", "+")
+                    response += f"""<div style="margin-bottom: 12px;">
+                        <strong>{product}</strong> – {benefit}<br>
+                        🔗 <a href="https://www.amazon.in/s?k={search_term}" target="_blank">Amazon</a> |
+                           <a href="https://www.flipkart.com/search?q={search_term}" target="_blank">Flipkart</a> |
+                           <a href="https://www.patanjaliayurved.net/search?query={search_term}" target="_blank">Patanjali</a>
+                    </div>"""
+                    shown.add(unique_key)
+        else:
+            response += "<br><strong>Couldn't find a direct match in the dataset. Here are some external suggestions:</strong><br><br>"
+            response += fetch_external_recommendations(user_input)
+
+        conversation["state"] = "completed"
+        session["conversation"] = conversation
+        session.modified = True
+        response = llm_response + "<br><br>" + response
+        print("Recommendations sent:", response)
+        return response
+
+    return llm_response
+
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
     if request.method == "POST":
@@ -205,18 +235,18 @@ def profile():
             'allergies': request.form.get("allergies"),
             'lifestyle': request.form.get("lifestyle"),
         }
-        return redirect("/")  # Redirect to chatbot after saving
+        session.modified = True
+        return redirect("/")
 
-    # 👉 Pre-fill form with session data if available
     profile_data = session.get("profile", {})
-    return render_template("profile.html", profile=session.get("profile", {}))
+    return render_template("profile.html", profile=profile_data)
 
 @app.route("/")
 def home():
     if "profile" not in session:
-        return redirect("/profile")  # Redirects to the profile form first
-    return render_template("index.html")  # If profile is filled, show chatbot
+        return redirect("/profile")
+    return render_template("index.html")
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 4000))  # Get port from environment variable
-    app.run(host="0.0.0.0", port=port) 
+    port = int(os.environ.get("PORT", 4000))
+    app.run(host="0.0.0.0", port=port, debug=True)

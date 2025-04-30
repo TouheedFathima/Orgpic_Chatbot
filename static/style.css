@@ -321,8 +321,49 @@ body {
   filter: brightness(0) invert(1); 
 }
 
+.chatbox {
+  padding: 20px; /* Kept for readability */
+}
 
-/* Optional hover effect */
-.help-button:hover {
-  transform: scale(1.1); 
+.chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  height: 600px; /* Increased from 550px for longer conversations */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+#startOverButton {
+  margin: 10px;
+  padding: 8px;
+  background-color: #FF8800;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#startOverButton {
+  margin: 10px;
+  padding: 8px;
+  background-color: #FF8800;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#startOverButton:hover {
+  background-color: #e07b00;
+}
+
+.chatbox {
+  padding: 20px; /* Increased padding for readability */
 }
