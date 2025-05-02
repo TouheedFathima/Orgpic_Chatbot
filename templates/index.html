@@ -49,27 +49,37 @@
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-    function addMessage(text, isUser = false) {
-      const currentTime = getCurrentTime();
-      const chatbox = document.getElementById("chatbox");
-      const messageDiv = document.createElement("div");
-      messageDiv.className = isUser ? "message user-message" : "message bot-message";
+function addMessage(text, isUser = false) {
+  const currentTime = getCurrentTime();
+  const chatbox = document.getElementById("chatbox");
+  const messageDiv = document.createElement("div");
+  messageDiv.className = isUser ? "message user-message" : "message bot-message";
 
-      const avatarImg = isUser ? USER_AVATAR_URL : BOT_AVATAR_URL;
+  const avatarImg = isUser ? USER_AVATAR_URL : BOT_AVATAR_URL;
 
-      messageDiv.innerHTML = `
-        <div class="message-content">
-          ${text}
-          <div class="message-avatar">
-            <img src="${avatarImg}" alt="${isUser ? 'User' : 'Bot'}">
-          </div>
-        </div>
-        <div class="message-time">${currentTime}</div>
-      `;
+  // Format the bot message to add line breaks for numbered/bulleted points
+  let formattedText = text;
+  if (!isUser) {
+    formattedText = formattedText
+      .replace(/\n{2,}/g, "<br><br>")        // Double line breaks as paragraphs
+      .replace(/\n/g, "<br>")               // Normal line breaks
+      .replace(/(?:^|\n)(\d+\.\s)/g, "<br>$1") // Ensure numbered points start on new lines
+      .replace(/(?:^|\n)([-*•]\s)/g, "<br>$1"); // Bullets
+  }
 
-      chatbox.appendChild(messageDiv);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
+  messageDiv.innerHTML = `
+    <div class="message-content">
+      ${formattedText}
+      <div class="message-avatar">
+        <img src="${avatarImg}" alt="${isUser ? 'User' : 'Bot'}">
+      </div>
+    </div>
+    <div class="message-time">${currentTime}</div>
+  `;
+
+  chatbox.appendChild(messageDiv);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
 
     function getBotResponse() {
       const userText = document.getElementById("userInput").value;
