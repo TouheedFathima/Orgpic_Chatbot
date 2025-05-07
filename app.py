@@ -48,7 +48,7 @@ Instructions:
 - If the user input is a greeting (e.g., "hi", "hello", "hlo"), respond kindly, reset the conversation, and ask how you can help.
 - If the user mentions a health problem, acknowledge it and ask at least two relevant clarifying questions to understand their condition better, unless you have enough information to proceed to recommendations earlier.
 - Condition-specific question guidance:
-  - For "hair fall" or "hairfall": Ask about symptoms (e.g., dandruff, itchiness), environmental factors (e.g., travel, water quality) or lifestyle changes (e.g., stress, diet).
+  - For "hair fall" or "hairfall": Ask about symptoms environmental factors (e.g., travel, water quality)and other factors like (e.g., dandruff, itchiness)or lifestyle changes (e.g., stress, diet).
   - For "PCOS": Ask about symptoms (e.g., irregular periods, facial hair) or diet/lifestyle changes.
   - For "acne": Ask about symptoms (e.g., location of acne, skin type) or skincare/diet triggers (e.g., change in water).
   - For other health problems, ask symptom-based or lifestyle-related questions relevant to the condition.similarly, use user intelligence and ask specific questions to all other user concerns  Ask only 2 specific questions.
@@ -197,6 +197,9 @@ def get_bot_response():
         "question_count": 0
     })
 
+    # Initialize top_matches as an empty DataFrame
+    top_matches = pd.DataFrame()
+
     # Handle reset request
     if user_input.lower().strip() == "reset":
         conversation = {"state": "initial", "health_problem": None, "context": [], "question_count": 0}
@@ -228,7 +231,7 @@ def get_bot_response():
     # Update question count and state
     if conversation["state"] == "questioning":
         conversation["question_count"] += 1
-        if (conversation["question_count"] >= 2 and any(kw in llm_response.lower() for kw in ["recommend", "suggest", "try", "use"])) or conversation["question_count"] >= 4:
+        if (conversation["question_count"] >= 2 and any(kw in llm_response.lower() for kw in ["recommend", "suggest", "try", "use"])) or conversation["question_count"] >= 2:
             conversation["state"] = "recommendation"
         else:
             conversation["state"] = "questioning"
