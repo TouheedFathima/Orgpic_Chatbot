@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, session, redirect
 import pandas as pd
 from sentence_transformers import SentenceTransformer, util
-import requests
-from bs4 import BeautifulSoup
 import re
 import os
 from keybert import KeyBERT
 from dotenv import load_dotenv
+import requests  # Still needed for Groq API
 
 load_dotenv()
 
@@ -24,7 +23,7 @@ kw_model = KeyBERT(model)
 
 def get_groq_reply(user_input, profile, conversation_context=None):
     prompt = f"""
-You are Piciki, a friendly and knowledgeable natural health assistant specializing in organic remedies.
+You are Piciki, a friendly and knowledgeable natural health assistant specializing in organic remedies for Momy's Farm.
 
 User Profile:
 - Name: {profile.get('name', 'Unknown')}
@@ -39,28 +38,35 @@ Conversation History:
 {conversation_context or 'No prior conversation'}
 
 Instructions:
-- Use a warm, natural tone. Greet the user by their first name ONLY in the first response of a new conversation.
-- Keep responses concise, readable, and well-structured:
+- Use a warm, friendly, and concise tone. Greet the user by their first name ONLY in the first response of a new conversation. Do not use the user’s name in subsequent responses unless starting a new session.
+- Keep responses short, readable, and well-structured:
   - Use short paragraphs (1-2 sentences max).
   - Separate distinct ideas (e.g., context, questions, remedies) into different paragraphs.
-  - When listing remedies, use a numbered list with clear, actionable steps.
-- Avoid repetitive greetings or overly enthusiastic responses.
+  - When listing remedies or products, use a numbered list with clear, actionable steps.
+- Avoid repetitive phrases like "Sorry to hear that," "It’s frustrating," or excessive enthusiasm.
 - If the user input is a greeting (e.g., "hi", "hello", "hlo"), respond kindly, reset the conversation, and ask how you can help.
-- If the user mentions a health problem, acknowledge it and ask at least two relevant clarifying questions to understand their condition better, unless you have enough information to proceed to recommendations earlier.
+- If the user explicitly requests remedies or products (e.g., contains "remedies," "products," "give me," "don’t ask," "just tell me"), provide recommendations immediately without asking further questions, using the health problem from the conversation context or user input.
+- For health problems, ask up to TWO relevant clarifying questions to understand the condition better, unless:
+  - The user explicitly requests remedies/products.
+  - You have enough information from prior responses (e.g., after two questions or clear context).
+  - Stop asking questions after two have been asked and proceed to recommendations.
 - Condition-specific question guidance:
-  - For "hair fall" or "hairfall": Ask about symptoms environmental factors (e.g., travel, water quality)and other factors like (e.g., dandruff, itchiness)or lifestyle changes (e.g., stress, diet).
-  - For "PCOS": Ask about symptoms (e.g., irregular periods, facial hair) or diet/lifestyle changes.
-  - For "acne": Ask about symptoms (e.g., location of acne, skin type) or skincare/diet triggers (e.g., change in water).
-  - For other health problems, ask symptom-based or lifestyle-related questions relevant to the condition.similarly, use user intelligence and ask specific questions to all other user concerns  Ask only 2 specific questions.
+  - For "hair fall" or "hairfall": Ask about symptoms (e.g., dandruff, itchiness) or lifestyle factors (e.g., stress, diet).
+  - For "PCOS": Ask about symptoms (e.g., irregular periods, facial hair) or diet/lifestyle.
+  - For "acne": Ask about symptoms (e.g., acne location, skin type) or triggers (e.g., diet, skincare).
+  - For other health problems, ask symptom-based or lifestyle-related questions relevant to the condition. Ask only TWO specific questions.
 - Use the user’s responses and conversation history to ask follow-up questions that build on prior answers, maintaining context and avoiding repetition.
-- Proceed to recommendations when you have enough information (e.g., after 2 or more questions, or if the problem is clear earlier):
-  - Suggest organic products or natural remedies tailored to the user’s condition, profile, and conversation history.
-  - Present remedies in a numbered list with clear steps (e.g., "1. Massage warm coconut oil into your scalp for 1 hour before shampooing.").
-  - If the user asks for product links, indicate that links to external sites will be provided.
-- Keep responses brief, helpful, and end with a follow-up question or "Would you like help with anything else?" when recommending.
+- Proceed to recommendations when:
+  - The user explicitly requests remedies/products.
+  - Two questions have been asked, or enough information is gathered earlier.
+  - Suggest organic remedies or products tailored to the user’s condition, profile, and conversation history.
+  - Present remedies in a numbered list with clear steps (e.g., "1. Steep chamomile tea for 10 minutes and drink before bed.").
+  - When recommending products, note they are not currently available on Momy's Farm, and the user will be notified when in stock. Mention they can be found on sites like Amazon, Flipkart, Patanjali, Nykaa, or 1mg, but do not provide direct links.
+- Keep responses brief and end with "Would you like help with anything else?" when recommending, or a single follow-up question if still clarifying.
 - If the user says "reset", clear the conversation history and start fresh.
 - Do not reset the conversation or misinterpret responses as greetings unless they are clearly greetings (e.g., "hi", "hello") or "reset".
 - Maintain context from the conversation history to avoid referencing incorrect topics.
+- If the user asks for links or where to buy products, inform them that products are not currently available on Momy's Farm, promise to notify when in stock, and note they can be found on sites like Amazon, Flipkart, Patanjali, Nykaa, or 1mg, but do not provide specific URLs.
 
 Current User Message: {user_input}
 """
@@ -89,7 +95,7 @@ Current User Message: {user_input}
         return "Oops! Couldn't understand your request. Can you please rephrase it?"
     except Exception as e:
         print("Groq API Error:", e)
-        return "Sorry, I'm having trouble right now. Please try again later!"
+        return "I’m having trouble right now. Please try again later!"
 
 def normalize_text(text):
     return re.sub(r"\s+", "", text.lower().strip())
@@ -103,61 +109,11 @@ def extract_keyphrases(text, num_phrases=3):
     phrases = [kw[0] for kw in keywords]
     return phrases[0] if phrases else text
 
-def scrape_product_links(product):
-    """
-    Scrape product links from five external sites for a given product.
-    Returns a dictionary with site names and URLs (or generic search URLs if scraping fails).
-    """
-    search_term = product.replace(" ", "+")
-    sites = {
-        "Amazon": f"https://www.amazon.in/s?k={search_term}",
-        "Flipkart": f"https://www.flipkart.com/search?q={search_term}",
-        "Patanjali": f"https://www.patanjaliayurved.net/search?query={search_term}",
-        "Nykaa": f"https://www.nykaa.com/search/result/?q={search_term}",
-        "1mg": f"https://www.1mg.com/search/all?name={search_term}"
-    }
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-
-    for site_name, search_url in sites.items():
-        try:
-            response = requests.get(search_url, headers=headers, timeout=5)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, "html.parser")
-
-            # Site-specific link extraction
-            if site_name == "Amazon":
-                link = soup.find("a", class_="a-link-normal s-no-outline")
-                if link and link.get("href"):
-                    sites[site_name] = "https://www.amazon.in" + link["href"]
-            elif site_name == "Flipkart":
-                link = soup.find("a", class_="_1fQZEK")
-                if link and link.get("href"):
-                    sites[site_name] = "https://www.flipkart.com" + link["href"]
-            elif site_name == "Patanjali":
-                link = soup.find("a", class_="product-item-link")
-                if link and link.get("href"):
-                    sites[site_name] = link["href"]
-            elif site_name == "Nykaa":
-                link = soup.find("a", class_="css-qlopj4")
-                if link and link.get("href"):
-                    sites[site_name] = "https://www.nykaa.com" + link["href"]
-            elif site_name == "1mg":
-                link = soup.find("a", class_="style__product-link___1V12L")
-                if link and link.get("href"):
-                    sites[site_name] = "https://www.1mg.com" + link["href"]
-
-        except Exception as e:
-            print(f"Error scraping {site_name} for {product}: {e}")
-            # Keep generic search URL as fallback
-
-    return sites
-
 def extract_products_from_response(response):
     """
     Extract product names from Grok's response using regex and dataset.
     Returns a list of unique product names.
     """
-    # Match products from dataset
     dataset_products = set(df['Product'].str.lower())
     products = []
     
@@ -175,7 +131,7 @@ def extract_products_from_response(response):
             if product in line.lower() and product not in [p.lower() for p in products]:
                 products.append(product.title())
 
-    # Add products explicitly mentioned in bold or links
+    # Add products explicitly mentioned in bold
     bold_matches = re.findall(r'\*\*([^\*]+)\*\*', response)
     for match in bold_matches:
         if match.lower() in dataset_products and match not in products:
@@ -208,6 +164,9 @@ def get_bot_response():
         print("Conversation reset:", conversation)
         return "Let's start fresh! What's your health concern?"
 
+    # Check for direct request for remedies/products
+    direct_request = any(kw in user_input.lower() for kw in ["remedies", "products", "give me", "don’t ask", "just tell me"])
+
     # Build conversation context
     conversation_context = "\n".join([f"User: {c['user']}\nBot: {c['bot']}" for c in conversation["context"]])
 
@@ -229,12 +188,13 @@ def get_bot_response():
                 break
 
     # Update question count and state
-    if conversation["state"] == "questioning":
+    if conversation["state"] == "questioning" and not direct_request:
         conversation["question_count"] += 1
-        if (conversation["question_count"] >= 2 and any(kw in llm_response.lower() for kw in ["recommend", "suggest", "try", "use"])) or conversation["question_count"] >= 2:
+        if conversation["question_count"] >= 2 or any(kw in llm_response.lower() for kw in ["recommend", "suggest", "try", "use"]):
             conversation["state"] = "recommendation"
-        else:
-            conversation["state"] = "questioning"
+    elif direct_request:
+        conversation["state"] = "recommendation"
+        conversation["question_count"] = 0  # Reset question count for direct requests
 
     session["conversation"] = conversation
     session.modified = True
@@ -259,28 +219,22 @@ def get_bot_response():
                         <strong>{product}</strong> – {benefit}<br>
                     </div>"""
                     shown.add(unique_key)
+            response += "<br>These products are not currently available on Momy's Farm. We'll notify you once they are in stock!<br>"
+            response += "In the meantime, you can find these products on sites like Amazon, Flipkart, Patanjali, Nykaa, or 1mg."
 
         conversation["state"] = "completed"
         session["conversation"] = conversation
         session.modified = True
 
-    # Handle explicit request for product links
+    # Handle explicit request for product links or purchase information
     if "link" in user_input.lower() or "buy" in user_input.lower() or "purchase" in user_input.lower():
         products = extract_products_from_response(llm_response)
         if not products and top_matches.empty:
-            response += "<br><br>Sorry, I couldn't identify specific products to provide links for. Please clarify the products or health concern."
+            response += "<br><br>I couldn’t identify specific products to recommend. Please clarify the products or health concern."
         else:
-            response += "<br><br><strong>Product Purchase Links:</strong><br><br>"
-            for product in products:
-                links = scrape_product_links(product)
-                response += f"""<div style="margin-bottom: 12px;">
-                    <strong>{product}</strong>:<br>
-                    🔗 <a href="{links['Amazon']}" target="_blank">Amazon</a> |
-                    🔗 <a href="{links['Flipkart']}" target="_blank">Flipkart</a> |
-                    🔗 <a href="{links['Patanjali']}" target="_blank">Patanjali</a> |
-                    🔗 <a href="{links['Nykaa']}" target="_blank">Nykaa</a> |
-                    🔗 <a href="{links['1mg']}" target="_blank">1mg</a>
-                </div>"""
+            response += "<br><br><strong>Where to Find Products:</strong><br><br>"
+            response += "These products are not currently available on Momy's Farm. We'll notify you once they are in stock!<br>"
+            response += "In the meantime, you can find these products on sites like Amazon, Flipkart, Patanjali, Nykaa, or 1mg."
 
     print("Response sent:", response)
     return response
