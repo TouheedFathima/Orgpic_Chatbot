@@ -18,8 +18,9 @@ app = Flask(__name__, template_folder='templates')
 app.secret_key = "orgpick_secret_123"
 
 # MongoDB connection
-client = MongoClient("mongodb://localhost:27017/")
-db = client["momy_db"]
+mongo_uri=os.getenv('MONGO_URI','mongodb://localhost:27017')
+client = MongoClient(mongo_uri)
+db = client["momys_farm"]
 product_collection = db["products"]
 profile_collection = db["profiles"]
 
