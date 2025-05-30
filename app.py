@@ -86,8 +86,48 @@ def categorize_product(product_name):
 def normalize_text(text):
     return re.sub(r"\s+", "", text.lower().strip())
 
-def get_groq_reply(user_input, profile, conversation_context=None, dataset_products=None):
-    prompt = f"""
+# Simple token estimation (approximate: 1 token ~ 4 characters for English text)
+def estimate_tokens(text):
+    return len(text) // 4 + 1  # Add 1 to account for small texts
+
+# Summarize conversation history to reduce token count
+def summarize_conversation(conversation_context, recommended_products):
+    summary = "Summary of earlier conversation:\n"
+    if recommended_products:
+        summary += f"Previously recommended products: {', '.join(recommended_products)}.\n"
+    else:
+        summary += "No products were recommended earlier.\n"
+    
+    # Load the dataset to get the list of health problems
+    df = load_products()
+    health_problems_list = df["Health Problem"].str.lower().unique().tolist()
+    
+    # Extract health problems mentioned in the conversation
+    health_problems = []
+    user_preferences = []
+    lines = conversation_context.split('\n')
+    for line in lines:
+        if line.startswith("User:"):
+            user_msg = line.replace("User: ", "").lower()
+            if "not products" in user_msg or "no products" in user_msg:
+                user_preferences.append("User prefers no product recommendations.")
+            for problem in health_problems_list:
+                if problem in user_msg:
+                    health_problems.append(problem)
+    
+    # Add health problems and preferences to the summary
+    if health_problems:
+        summary += f"Health concerns discussed: {', '.join(set(health_problems))}.\n"
+    if user_preferences:
+        summary += f"User preferences: {' '.join(set(user_preferences))}\n"
+    else:
+        summary += "Recent topics discussed: Health concerns, product categories, and remedies.\n"
+    
+    return summary
+
+def get_groq_reply(user_input, profile, conversation_context=None, dataset_products=None, recommended_products=None, conversation_state=None):
+    # Base prompt components
+    base_prompt = f"""
 You are Piciki, a friendly and knowledgeable natural health assistant for Momy's Farm, specializing in organic remedies.
 
 User Profile:
@@ -99,31 +139,60 @@ User Profile:
 - Allergies: {profile.get('allergies', 'None')}
 - Lifestyle: {profile.get('lifestyle', 'Not specified')}
 
-Conversation History:
-{conversation_context or 'No prior conversation'}
+Conversation State:
+- Current State: {conversation_state or 'initial'}
+
+Previously Recommended Products (if any):
+{recommended_products or 'None'}
 
 Dataset Products (for reference in remedy/how-to-use responses):
 {dataset_products or 'No specific products provided'}
 
 Instructions:
-- Use a warm, friendly, and concise tone. Greet the user by their first name ONLY in the first response of a new conversation.
-- Keep responses short, readable, and well-structured:
-  - Use short paragraphs (1-2 sentences).
-  - For remedies, how-to-use, diet plans, or product explanations, provide a numbered list with clear, point-wise explanations (e.g., "1. Garlic: Add to cooking to lower cholesterol").
-- If the user input is a greeting (e.g., "hi", "hello", "hlo"), respond kindly, reset the conversation, and ask how you can help.
-- For health problems without an explicit product request, ask ONE relevant clarifying question to understand the concern unless you have enough information from prior responses.
+- Use a friendly and concise tone.
+- Do NOT greet the user (e.g., "Hi [Name]!") unless explicitly instructed to do so in the conversation state (e.g., when the state is set to 'greeting'). If the state is 'greeting', greet the user by their first name (e.g., "Hey [Name]! How can I assist you today?").
+- Keep responses very short, clear, and structured:
+  - Use 1-2 sentence points in numbered lists for remedies, recipes, product explanations, or usage tips.
+  - Avoid long paragraphs; each point should be 10-15 words max.
+  - Focus on organic benefits when recommending products or remedies.
+- For health problems without a product request, ask ONE short clarifying question (e.g., "Do you have oily skin?").
 - Condition-specific question guidance:
-  - For "hair fall" or "dandruff": Ask about symptoms (e.g., itchiness, flakiness) or product preference (e.g., shampoos, oils).
-  - For "PCOS": Ask about symptoms (e.g., irregular periods) or diet preferences.
-  - For "acne": Ask about skin type or triggers (e.g., oily skin, diet).
-  - For "digestive issues": Ask about symptoms (e.g., bloating, constipation).
-- For diet plan requests (e.g., "diet plan," "meal plan"), provide a detailed, condition-specific diet plan in a numbered list, including foods to include and avoid, tailored to the user's health concern (e.g., PCOS-friendly foods).
-- For non-product queries (e.g., "recipe," "benefit," "how to," "diet plan"), provide detailed general advice, recipes, or usage instructions in a numbered list without recommending products unless explicitly requested.
-- For remedy or how-to-use queries (e.g., "remedies for hair fall," "how to use shampoo"), provide general remedies or usage instructions in a numbered list, referencing dataset products only if listed in the provided dataset_products.
-- For product requests (e.g., "products," "give me," "recommend"), provide general advice or context about the health concern or product category without recommending specific products.
-- If the user clarifies they don’t want products (e.g., "not products"), focus on general advice, recipes, or diet plans without product recommendations.
-- End responses with "Would you like help with anything else?" when appropriate.
+  - For "hair fall" or "dandruff": Ask about symptoms (e.g., "Is your scalp itchy?").
+  - For "PCOS": Ask about symptoms (e.g., "Are periods irregular?").
+  - For "acne": Ask about skin type (e.g., "Is your skin oily?").
+  - For "digestive issues": Ask about symptoms (e.g., "Do you feel bloated?").
+  - For "sleep disorder": Ask about patterns (e.g., "Trouble falling asleep?").
+  - For other concerns, ask a related short question.
+- For diet plans, provide a concise numbered list of foods to include/avoid.
+- For non-product queries (e.g., "recipe," "benefit," "how to"), give short, point-wise advice without products unless requested.
+- For remedy or how-to-use queries, provide a short numbered list of usage tips.
+- For product requests, provide general organic context in 1-2 short sentences before recommendations.
+- For product knowledge (e.g., "tell me about Brahmi"), provide a short numbered list of benefits and usage (3-4 points max).
+- If the user doesn’t want products (e.g., "not products"), focus on short general advice.
+- Use conversation history to maintain context (e.g., "tell me more about the rice" refers to prior rice mentions).
+- Only use profile data if directly relevant to the query.
+- End with "Would you like help with anything else?" when appropriate.
 - Do not provide specific URLs for external sites.
+"""
+
+    # Handle conversation history with token management
+    MAX_TOKENS = 6000  # Leave room for prompt and response (8192 total for llama3-70b-8192)
+    conversation_history = conversation_context or "No prior conversation"
+    
+    # Estimate tokens for the base prompt and conversation history
+    base_prompt_tokens = estimate_tokens(base_prompt)
+    conversation_tokens = estimate_tokens(conversation_history)
+    total_tokens = base_prompt_tokens + conversation_tokens + estimate_tokens(user_input)
+
+    # If token count exceeds the limit, summarize the conversation
+    if total_tokens > MAX_TOKENS:
+        summarized_history = summarize_conversation(conversation_history, recommended_products)
+        conversation_history = summarized_history
+        print("Conversation history summarized due to token limit:", summarized_history)
+
+    prompt = base_prompt + f"""
+Conversation History (full history, summarized if too long):
+{conversation_history}
 
 Current User Message: {user_input}
 """
@@ -225,16 +294,19 @@ def get_bot_response():
 
     # Handle greetings
     if user_input.lower().strip() in ["hi", "hello", "hlo", "hey"]:
-        conversation = {"state": "initial", "health_problem": None, "context": [], "question_count": 0, "specific_product_type": None, "recommended_products": [], "no_products": False}
+        conversation = {"state": "greeting", "health_problem": None, "context": [], "question_count": 0, "specific_product_type": None, "recommended_products": [], "no_products": False}
         session["conversation"] = conversation
         session.modified = True
         print("Greeting detected, conversation reset:", conversation)
-        return f"Hey {profile.get('name', '')}! How can I assist you today?"
+    else:
+        # Ensure the state is not 'greeting' for non-greeting inputs
+        if conversation["state"] == "greeting":
+            conversation["state"] = "initial"
 
     # Check for query types
     non_health_query = any(kw in user_input.lower() for kw in ["recipe", "benefit", "how to", "what is", "diet plan", "meal plan"])
     product_request = any(kw in user_input.lower() for kw in ["products", "give me", "recommend", "suggest", "items", "list"]) and not any(kw in user_input.lower() for kw in ["diet", "plan"])
-    remedy_query = any(kw in user_input.lower() for kw in ["remedies", "how to use", "consumption"])
+    remedy_query = any(kw in user_input.lower() for kw in ["remedies", "how to use", "consumption", "consume"])
     no_products_clarification = any(kw in user_input.lower() for kw in ["not products", "no products", "don’t want products"])
 
     # Detect specific product type
@@ -304,8 +376,8 @@ def get_bot_response():
                 conversation["recommended_products"] = []
                 conversation["no_products"] = False
 
-    # Build conversation context (limit to last 5 exchanges)
-    conversation_context = "\n".join([f"User: {c['user']}\nBot: {c['bot']}" for c in conversation["context"][-5:]])
+    # Build conversation context (include all messages, will be managed by token limit in get_groq_reply)
+    conversation_context = "\n".join([f"User: {c['user']}\nBot: {c['bot']}" for c in conversation["context"]])
 
     # Update state for questioning mode
     if conversation["state"] == "questioning":
@@ -315,9 +387,13 @@ def get_bot_response():
 
     # Prepare dataset products for remedy queries
     dataset_products = ""
-    if conversation["state"] == "remedy" and conversation["recommended_products"]:
+    if conversation["state"] in ["remedy"] and conversation["recommended_products"]:
         relevant_products = df[df["Product"].isin(conversation["recommended_products"])]
         dataset_products = "\n".join([f"- {row['Product']}: {row['Health Benefit']} (for {row['Health Problem']}, category: {row['category']})" for _, row in relevant_products.iterrows()])
+
+    # Prepare recommended products for the prompt
+    recommended_products = "\n".join([f"- {prod}" for prod in conversation["recommended_products"]]) if conversation["recommended_products"] else "None"
+    print("Recommended products being passed to prompt:", recommended_products)
 
     # Check MongoDB for products first for product requests
     response = ""
@@ -364,7 +440,7 @@ def get_bot_response():
 
     # Get LLM response for non-product queries or if no products found
     try:
-        llm_response = get_groq_reply(user_input, profile, conversation_context, dataset_products if conversation["state"] == "remedy" else None)
+        llm_response = get_groq_reply(user_input, profile, conversation_context, dataset_products, recommended_products, conversation["state"])
     except Exception:
         if conversation["state"] == "recommendation" and product_request:
             response = "<br><br>Note: I couldn’t find specific products in our database for this concern, and I’m having trouble connecting to provide general advice. Please try again later!"
@@ -375,10 +451,8 @@ def get_bot_response():
             return response
         return "I’m having trouble right now. Please try again later!"
 
-    # Store conversation
+    # Store conversation (no limit on number of messages)
     conversation["context"].append({"user": user_input, "bot": llm_response})
-    if len(conversation["context"]) > 10:
-        conversation["context"] = conversation["context"][-10:]
     session["conversation"] = conversation
     session.modified = True
     print("Updated conversation:", conversation)
@@ -393,7 +467,7 @@ def get_bot_response():
         session.modified = True
 
     # Handle remedy queries
-    if conversation["state"] == "remedy" and conversation["recommended_products"]:
+    if conversation["state"] in ["remedy"] and conversation["recommended_products"]:
         response = llm_response
         response += "<br>Would you like help with anything else?"
         conversation["state"] = "completed"

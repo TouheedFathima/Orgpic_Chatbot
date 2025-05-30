@@ -2,84 +2,439 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OrgPick Assistant</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Momy's Farm - Organic Health Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('{{ url_for("static", filename="img/leaf-bg.jpg") }}') no-repeat center center fixed;
+      background-size: cover;
+      background-color: #f4f7f6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      width: 500px; /* Fixed width */
+      height: 600px; /* Fixed height */
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      position: fixed; /* Position on the right side */
+      bottom: 20px; /* Align to bottom */
+      right: 20px; /* Align to right */
+    }
+
+    .chat-container.maximized {
+      width: 80%;
+      max-width: 800px; /* Maximized width */
+      top: 72px; 
+      bottom: 0;
+      height: auto; 
+      max-height: none; 
+      right: 0;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #86C33B);
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-header .bot-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .chat-header span {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .chat-header .header-right {
+      display: flex;
+      gap: 10px; /* Space between buttons */
+    }
+
+    .close-btn, .toggle-size-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .close-btn:hover, .toggle-size-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .chatbox {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .message-content {
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 80%;
+      font-size: 1rem;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bot-message {
+      flex-direction: row;
+    }
+
+    .bot-message .message-content {
+      background: #e8f5e9;
+      color: #333;
+      align-items: flex-start;
+    }
+
+    .bot-message .message-content div {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 4px;
+    }
+
+    .bot-message .message-content div:last-child {
+      margin-bottom: 0;
+    }
+
+    .user-message {
+      flex-direction: row-reverse;
+    }
+
+    .user-message .message-content {
+      background: #86C33B;
+      color: #fff;
+      align-items: flex-end;
+    }
+
+    .message-avatar img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .message-time {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 4px;
+      align-self: flex-end; /* Aligns the timestamp to the right */
+      text-align: right; /* Ensures the text itself is right-aligned */
+    }
+
+    .user-message .message-time {
+      color: #e0e0e0; /* Lighter color for better contrast on the green background */
+      align-self: flex-end;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .typing-indicator span {
+      width: 10px;
+      height: 10px;
+      background: #86C33B;
+      border-radius: 50%;
+      animation: bounce 0.6s infinite alternate;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      to { transform: translateY(-6px); }
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 16px;
+      background: #fff;
+      border-top: 1px solid #eee;
+      gap: 12px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .chat-input input:focus {
+      border-color: #CC6203; /* Changed outline color to orange */
+      box-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
+    }
+
+    .chat-input button {
+      background: #CC6203; 
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-input button:hover {
+      background: #b35603; 
+    }
+
+    .chat-input button img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      background: #fff;
+      border-top: 1px solid #eee;
+    }
+
+    .buttons-container button {
+      padding: 12px 24px;
+      background: #CC6203;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .buttons-container button:hover {
+      background: #b35603; 
+    }
+
+    .help-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #86C33B;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
+    }
+
+    .help-button:hover {
+      transform: scale(1.05);
+    }
+
+    .help-button img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .user-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+
+    .user-icon img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #CC6203;
+      transition: transform 0.2s;
+    }
+
+    .user-icon:hover img {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+      .chat-container {
+        width: 100%;
+        height: 100vh;
+        max-height: none; /* Full height on mobile */
+        max-width: none; /* Full width on mobile */
+        margin: 0;
+        border-radius: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      .chat-container.maximized {
+        width: 100%;
+        height: 100vh;
+        max-height: none;
+        max-width: none;
+        top: 0; /* Full height on mobile, ignore user icon */
+        bottom: 0;
+        right: 0;
+      }
+
+      .chatbox {
+        flex: 1;
+      }
+
+      .chat-header span {
+        font-size: 1.2rem;
+      }
+
+      .message-content {
+        font-size: 0.9rem;
+        max-width: 90%;
+      }
+
+      .chat-input input {
+        font-size: 0.9rem;
+      }
+
+      .help-button {
+        bottom: 16px;
+        right: 16px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <a href="/profile" class="user-icon" style="position: fixed; top: 20px; right: 20px; z-index: 999;">
-    <img src="{{ url_for('static', filename='img/user_img.png') }}" alt="User Profile" width="40" style="border-radius: 50%;">
+  <a href="/profile" class="user-icon" aria-label="User Profile">
+    <img src="{{ url_for('static', filename='img/user_img.png') }}" alt="User Profile">
   </a>
 
-  <div class="chat-container" id="chatContainer" style="display:none;">
+  <div class="chat-container" id="chatContainer">
     <div class="chat-header">
       <div class="header-left">
-        <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Bot Icon" class="bot-icon">
-        <span>OrgPick Assistant</span>
+        <img src="{{ url_for('static', filename='img/icons.png') }}" alt="Bot Icon" class="bot-icon">
+        <span>Momy's Farm Assistant</span>
       </div>
-      <button class="close-btn">
-        <i class="fas fa-times"></i>
-      </button>
+      <div class="header-right">
+        <button class="toggle-size-btn" aria-label="Maximize/Minimize Chat">
+          <i class="fas fa-expand-alt"></i>
+        </button>
+        <button class="close-btn" aria-label="Close Chat">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
     </div>
 
-    <div id="chatbox" class="chatbox"></div>
+    <div id="chatbox" class="chatbox" role="log" aria-live="polite"></div>
 
     <div class="chat-input">
-      <input type="text" id="userInput" placeholder="Message">
-      <button class="mic-btn">
+      <input type="text" id="userInput" placeholder="Ask about organic health remedies..." aria-label="Message Input">
+      <button class="mic-btn" aria-label="Microphone">
         <img src="{{ url_for('static', filename='img/material-symbols_mic.svg') }}" alt="Mic">
       </button>
-      <button id="sendButton" class="send-btn">
+      <button id="sendButton" class="send-btn" aria-label="Send Message">
         <img src="{{ url_for('static', filename='img/carbon_send-alt.svg') }}" alt="Send">
       </button>
     </div>
-    <button id="startOverButton" style="margin: 10px; padding: 8px; background-color: #FF8800; color: white; border: none; border-radius: 5px; cursor: pointer;">Start Over</button>
+    <div class="buttons-container">
+      <button id="startOverButton">Start Over</button>
+    </div>
   </div>
 
-  <button class="help-button" id="helpButton">
-    <img src="{{ url_for('static', filename='img/mage_robot-happy.svg') }}" alt="Help" class="help-icon">
-    Ask Me Anything?
+  <button class="help-button" id="helpButton" aria-label="Open Chat">
+    <img src="{{ url_for('static', filename='img/icons.png') }}" alt="Bot Icon">
+    Get Product Suggestions and health guide!
   </button>
 
   <script>
-    const BOT_AVATAR_URL = "{{ url_for('static', filename='img/mage_robot-happy.svg') }}";
+    const BOT_AVATAR_URL = "{{ url_for('static', filename='img/icons.png') }}";
     const USER_AVATAR_URL = "{{ url_for('static', filename='img/user_img.png') }}";
 
     function getCurrentTime() {
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-function addMessage(text, isUser = false) {
-  const currentTime = getCurrentTime();
-  const chatbox = document.getElementById("chatbox");
-  const messageDiv = document.createElement("div");
-  messageDiv.className = isUser ? "message user-message" : "message bot-message";
+    function addMessage(text, isUser = false) {
+      const currentTime = getCurrentTime();
+      const chatbox = document.getElementById("chatbox");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = isUser ? "message user-message" : "message bot-message";
 
-  const avatarImg = isUser ? USER_AVATAR_URL : BOT_AVATAR_URL;
+      const avatarImg = isUser ? USER_AVATAR_URL : BOT_AVATAR_URL;
 
-  // Format the bot message to add line breaks for numbered/bulleted points
-  let formattedText = text;
-  if (!isUser) {
-    formattedText = formattedText
-      .replace(/\n{2,}/g, "<br><br>")        // Double line breaks as paragraphs
-      .replace(/\n/g, "<br>")               // Normal line breaks
-      .replace(/(?:^|\n)(\d+\.\s)/g, "<br>$1") // Ensure numbered points start on new lines
-      .replace(/(?:^|\n)([-*•]\s)/g, "<br>$1"); // Bullets
-  }
+      // Format bot message for readability
+      let formattedText = text;
+      if (!isUser) {
+        formattedText = formattedText
+          .replace(/\n{2,}/g, "<br><br>")
+          .replace(/\n/g, " ")
+          .replace(/(?:^|\s)(\d+\.\s)/g, "<br>$1")
+          .replace(/(?:^|\s)([-*•]\s)/g, "<br>$1")
+          .replace(/<strong>/g, '<strong style="color: #2E7D32;">');
+      }
 
-  messageDiv.innerHTML = `
-    <div class="message-content">
-      ${formattedText}
-      <div class="message-avatar">
-        <img src="${avatarImg}" alt="${isUser ? 'User' : 'Bot'}">
-      </div>
-    </div>
-    <div class="message-time">${currentTime}</div>
-  `;
+      messageDiv.innerHTML = `
+        <div class="message-avatar">
+          <img src="${avatarImg}" alt="${isUser ? 'User' : 'Bot'}" loading="lazy">
+        </div>
+        <div class="message-content">
+          ${formattedText}
+          <div class="message-time">${currentTime}</div>
+        </div>
+      `;
 
-  chatbox.appendChild(messageDiv);
-  chatbox.scrollTop = chatbox.scrollHeight;
-}
+      chatbox.appendChild(messageDiv);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
 
     function getBotResponse() {
       const userText = document.getElementById("userInput").value;
@@ -112,7 +467,7 @@ function addMessage(text, isUser = false) {
     document.addEventListener("DOMContentLoaded", () => {
       const chatbox = document.getElementById("chatbox");
 
-      addMessage("Hey there! I'm Piciki. How can I assist you today?", false);
+      addMessage("Hey there! I'm Piciki, your organic health assistant from Momy's Farm. How can I help you today?", false);
 
       document.getElementById("sendButton").onclick = getBotResponse;
       document.getElementById("userInput").addEventListener("keypress", function(e) {
@@ -120,6 +475,7 @@ function addMessage(text, isUser = false) {
       });
 
       const closeBtn = document.querySelector('.close-btn');
+      const toggleSizeBtn = document.querySelector('.toggle-size-btn');
       const helpButton = document.querySelector('#helpButton');
       const chatContainer = document.querySelector('#chatContainer');
       const startOverButton = document.querySelector('#startOverButton');
@@ -127,11 +483,22 @@ function addMessage(text, isUser = false) {
       closeBtn.addEventListener('click', function() {
         chatContainer.style.display = 'none';
         helpButton.style.display = 'flex';
+        chatContainer.classList.remove('maximized'); // Reset to default size when closing
+        toggleSizeBtn.innerHTML = '<i class="fas fa-expand-alt"></i>'; // Reset icon to maximize
       });
 
       helpButton.addEventListener('click', function() {
         chatContainer.style.display = 'flex';
         helpButton.style.display = 'none';
+      });
+
+      toggleSizeBtn.addEventListener('click', function() {
+        chatContainer.classList.toggle('maximized');
+        if (chatContainer.classList.contains('maximized')) {
+          toggleSizeBtn.innerHTML = '<i class="fas fa-compress-alt"></i>'; // Minimize icon
+        } else {
+          toggleSizeBtn.innerHTML = '<i class="fas fa-expand-alt"></i>'; // Maximize icon
+        }
       });
 
       startOverButton.addEventListener('click', function() {
